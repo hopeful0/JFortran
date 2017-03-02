@@ -26,7 +26,11 @@ public class Run {
 			*/
 			code = Server.readCode(br);
 			//编译代码
-			FCompiler.compileCode(code, "./temp/exe");
+			String compile = FCompiler.compileCode(code, "./temp/exe");
+			if(! compile.contains("编译成功！")) {
+				os.write(compile.getBytes());
+				return;
+			}
 			//执行程序
 			Terminal terminal = new Terminal("./temp/exe");
 			terminal.start();
