@@ -39,7 +39,7 @@ public class Run {
 			terminal.start();
 			lastHeart = System.nanoTime();
 	 		while(terminal.process.isAlive()) {
-				if (System.nanoTime() - lastHeart > 100000000) {
+				if (System.nanoTime() - lastHeart > 1000000000) {
 					System.out.println("Lose Connection!");
 					break;
 				}
