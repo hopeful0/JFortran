@@ -36,7 +36,7 @@ public class Run {
 			//执行程序
 			Terminal terminal = new Terminal("./temp/exe");
 			terminal.start();
-	 		while(client.isConnected() && terminal.process.isAlive()) {
+	 		while(!client.isClosed() && terminal.process.isAlive()) {
 				String input = "";
 				//有输入时获取输入
 		 		if(is.available() > 0) {
