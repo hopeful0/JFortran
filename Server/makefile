@@ -6,7 +6,7 @@ compile:$(SRC)
 	$(COMPILE) $(SRC)
 
 clean:
-	rm -f ./cn/hopefulme/jfortran/*.class nohup.out
+	rm -f ./cn/hopefulme/jfortran/*.class nohup.out temp/*
 
 run:
 	$(JAVA) cn.hopefulme.jfortran.Main
