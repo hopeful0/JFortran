@@ -24,19 +24,14 @@ public class Server {
 						os.flush();
 						break;
 					case "run":
-						Run.run(is, br, os, new Runnable() {
-
-							@Override
-							public void run() {
-								try {
-									os.write("程序运行结束。\n".getBytes());
-									os.flush();
-								} catch (IOException e) {
-									System.out.println("Server_run_callback_IOException:" + e.getMessage());
-								}
-							}
-
-						});
+						Run.run(client ,is, br, os);
+						if (! client.isConnected()) break;
+						try {
+							os.write("程序运行结束。\n".getBytes());
+							os.flush();
+						} catch (IOException e) {
+							System.out.println("Server_run_callback_IOException:" + e.getMessage());
+						}
 						break;
 				}
 				br.close();

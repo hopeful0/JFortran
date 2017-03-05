@@ -1,17 +1,18 @@
 package cn.hopefulme.jfortran;
 
+import java.net.Socket;
 import java.io.*;
 
 public class Run {
 
 	/**
 	 * 运行程序
+	 * @param client socket客户端
 	 * @param is socket输入流，用来读取客户端输入
 	 * @param br socket输入流，用来按行读取客户端输入
 	 * @param os socket输出流，向客户端返回信息
-	 * @param callback 回调，程序执行结束后调用
 	 */
-	public static void run(InputStream is, BufferedReader br, OutputStream os, Runnable callback) {
+	public static void run(Socket client, InputStream is, BufferedReader br, OutputStream os) {
 		try {
 			//读取代码
 			String code = "";
@@ -35,15 +36,15 @@ public class Run {
 			//执行程序
 			Terminal terminal = new Terminal("./temp/exe");
 			terminal.start();
-	 		while(terminal.process.isAlive()) {
+	 		while(client.isConnected() && terminal.process.isAlive()) {
 				String input = "";
 				//有输入时获取输入
-				if(is.available() > 0) {
+		 		if(is.available() > 0) {
 					String data;
 					while((data=br.readLine()) != null) {
 						if(data.equals("**##*#*#input ended**##*#*#")) break;
 						input += data + "\n";
-				 	}
+		 		 	}
 					terminal.input(input);
 				} 
 				String output = terminal.output();
@@ -53,10 +54,10 @@ public class Run {
 					os.flush();
 	 			}
 				Thread.sleep(30);
-			}
+		 	}
 			String output = terminal.output();
 			//有输出时输出信息
-			if(output.length() > 0) {
+		 	if(output.length() > 0) {
 				os.write(output.getBytes());
 				os.flush();
 	 		}
@@ -64,9 +65,6 @@ public class Run {
 			System.out.println("Run_run_IOException" + e.getMessage());
 	 	} catch (InterruptedException e) {
 			System.out.println("Run_run_InterruptedException" + e.getMessage());
-		} finally {
-			//执行回调
-			callback.run();
 		}
 	}
 
