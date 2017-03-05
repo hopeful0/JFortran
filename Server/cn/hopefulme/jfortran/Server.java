@@ -24,8 +24,7 @@ public class Server {
 						os.flush();
 						break;
 					case "run":
-						Run.run(client ,is, br, os);
-						if (client.isClosed()) break;
+						if (! Run.run(client ,is, br, os)) break;
 						try {
 							os.write("程序运行结束。\n".getBytes());
 							os.flush();
