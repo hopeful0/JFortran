@@ -3,6 +3,8 @@ package cn.hopefulme.jfortran.client;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.*;
@@ -40,6 +42,14 @@ import javax.swing.*;
 		btn_input = new JButton("Input");
 		// TextField
 		tf_input = new JTextField(30);
+		tf_input.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Client.sendInput(tf_input.getText());
+				}
+			}
+		});
 		// ScrollPane and TextArea
 		ta_code = new JTextArea(35, 40);
 		ta_code.setLineWrap(true);
@@ -93,7 +103,7 @@ import javax.swing.*;
 				Client.start(new Client.Callback() {
 					@Override
 					public void output(String msg) {
-						ta_output.append(msg + "\n");
+						updateOutput(msg+'\n');
 					}
 					@Override
 					public void connected() {
@@ -102,7 +112,7 @@ import javax.swing.*;
 					}
 					@Override
 					public void connectFailed() {
-						ta_output.append("Connected Failed!\n");
+						updateOutput("Connected Failed!\n");
 					}
 				});
 				break;
@@ -110,7 +120,7 @@ import javax.swing.*;
 				Client.start(new Client.Callback() {
 					@Override
 					public void output(String msg) {
-						ta_output.append(msg + "\n");
+						updateOutput(msg+'\n');
 					}
 					@Override
 					public void connected() {
@@ -119,14 +129,19 @@ import javax.swing.*;
 					}
 					@Override
 					public void connectFailed() {
-						ta_output.append("Connected Failed!\n");
+						updateOutput("Connected Failed!\n");
 					}
 				});
 				break;
 			case "input":
-
+				Client.sendInput(tf_input.getText());
 				break;
 		}
+	}
+
+	private void updateOutput(String output) {
+		ta_output.append(output + "\n");
+		ta_output.setCaretPosition(ta_output.getText().length());
 	}
 
 }
