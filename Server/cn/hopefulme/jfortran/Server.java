@@ -11,6 +11,7 @@ public class Server {
 			ServerSocket server = new ServerSocket(1552);
 			while(true) {
 				Socket client = server.accept();
+				client.setSoTimeout(1000);
 				InputStream is = client.getInputStream();
 				final OutputStream os = client.getOutputStream();
 				InputStreamReader isr = new InputStreamReader(is);
@@ -24,7 +25,7 @@ public class Server {
 						os.flush();
 						break;
 					case "run":
-						if (! Run.run(client ,is, br, os)) break;
+						Run.run(is, br, os);
 						try {
 							os.write("程序运行结束。\n".getBytes());
 							os.flush();
@@ -49,6 +50,8 @@ public class Server {
 		String data;
 		try { 
 			while((data = br.readLine()) != null) {
+				//忽略其中的心跳包
+				if(data.equals("**##*#*#heart package**##*#*#")) continue;
 				if(data.equals("**##*#*#code ended**##*#*#")) break;
 				code += data + "\n";
 			}
